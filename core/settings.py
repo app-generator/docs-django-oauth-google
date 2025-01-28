@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 import os, random, string
 from pathlib import Path
+from dotenv import load_dotenv
+
+load_dotenv()  # take environment variables from .env.
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,10 +23,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-b+$5wugqo%4&wt1+^jy+6x+#p3z*f__c__7(j9-4qp@24nl65n"
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', False)
 
 # Hosts Settings
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.onrender.com', '0.0.0.0']
@@ -42,6 +45,11 @@ INSTALLED_APPS = [
     # APPS
     "home",
 
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+
     # Util
     "debug_toolbar",
 ]
@@ -58,6 +66,9 @@ MIDDLEWARE = [
 
     # Util
     "debug_toolbar.middleware.DebugToolbarMiddleware",
+
+    # Required for allauth
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = "core.urls"
@@ -140,3 +151,16 @@ STATICFILES_DIRS = (
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'APP':{
+            'client_id': os.getenv('GOOGLE_CLIENT_ID', default=""),
+            'secret': os.getenv('GOOGLE_SECRET_KEY', default=""),
+        }
+    }
+}
+
+
+LOGIN_REDIRECT_URL = '/'

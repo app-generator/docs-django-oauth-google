@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+{% load static socialaccount %}
+{% get_providers as socialaccount_providers %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+</head>
+<body>
+    <h1>Login</h1>
+    <form action="{% provider_login_url 'google' %}" method="post">
+        {% csrf_token %}
+
+        <button type="submit">Login with Google</button>
+    </form>
+</body>
+</html>
